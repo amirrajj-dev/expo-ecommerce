@@ -1,0 +1,43 @@
+{
+  "name": "backend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.1",
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.19",
+    "@types/morgan": "^1.9.10",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.7.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@clerk/express": "^1.7.53",
+    "@types/express": "^5.0.6",
+    "cloudinary": "^2.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "inngest": "^3.46.0",
+    "ioredis": "^5.8.2",
+    "mongoose": "^9.0.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "winston": "^3.18.3"
+  }
+}
