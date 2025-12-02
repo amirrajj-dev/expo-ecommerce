@@ -7,6 +7,8 @@ import { clerkMiddleware } from '@clerk/express';
 import morgan from 'morgan';
 import logger from './logging/logger';
 import helmet from 'helmet';
+import { serve } from 'inngest/express';
+import { functions, inngest } from './libs/inngest';
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -21,6 +23,13 @@ app.use(
   }),
 );
 app.use(clerkMiddleware());
+app.use(
+  '/api/inngest',
+  serve({
+    client: inngest,
+    functions,
+  }),
+);
 
 app.get('/api/health', (req: Request, res: Response) => {
   logger.info('Health Check');
