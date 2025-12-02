@@ -4,14 +4,26 @@ import { ENV } from './configs/env';
 import mongoose from 'mongoose';
 import { connectToDb } from './db/connectToDb';
 import { clerkMiddleware } from '@clerk/express';
+import morgan from 'morgan';
+import logger from './logging/logger';
+import helmet from 'helmet';
 
 const app = express();
 const PORT = ENV.PORT || 3000;
 const __dirname = path.resolve();
 
+app.use(express.json());
+app.use(morgan('dev', { stream: { write: (msg) => logger.http(msg.trim()) } }));
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(clerkMiddleware());
 
 app.get('/api/health', (req: Request, res: Response) => {
+  logger.info('Health Check');
   return res.status(200).json({
     messsage: 'OK',
     success: true,
@@ -30,10 +42,10 @@ const startServer = async () => {
   try {
     await connectToDb();
     app.listen(PORT, () => {
-      console.log(`app is running on port ${PORT} ⚡️`);
+      logger.info(`app is running on port ${PORT} ⚡️`);
     });
   } catch (error) {
-    console.log('❌ Internal server error => ', error instanceof Error ? error.message : error);
+    logger.error(`internal server error ${error instanceof Error ? error.message : error}`);
     process.exit(1);
   }
 };
@@ -42,7 +54,7 @@ startServer();
 
 // Graceful Shutdown
 process.on('SIGINT', async () => {
-  console.log('Shutting down gracefully...');
+  logger.info('Shutting down gracefully...');
   await mongoose.connection.close();
   process.exit(0);
 });
