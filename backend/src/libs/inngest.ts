@@ -3,6 +3,9 @@ import { Inngest } from 'inngest';
 import { User } from '../models/user.model';
 import logger from '../logging/logger';
 import type { IUser } from '../interfaces/user.interface';
+import { transporter } from './nodemailer';
+import { ENV } from '../configs/env';
+import { WELCOME_EMAIL_HTML } from '../../helpers/welcome-email';
 
 export const inngest = new Inngest({
   id: 'expo-commerce',
@@ -34,6 +37,13 @@ const syncUser = inngest.createFunction(
         wishlist: [],
       };
       await User.create(newUser);
+      // sending welcome email
+      transporter.sendMail({
+        from: ENV.EMAIL_USER,
+        to: newUser.email,
+        subject: 'Welcome to Expo-Ecommerce 🎉',
+        html: WELCOME_EMAIL_HTML(newUser.name),
+      });
     } catch (error) {
       logger.error(`error syncing user => ${error instanceof Error ? error.message : error}`);
     }
@@ -47,6 +57,7 @@ const deleteUser = inngest.createFunction(
   },
   async ({ event }) => {
     try {
+      logger.info('deleting user ...');
       await connectToDb();
       const { id } = event.data;
       await User.deleteOne({

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch src/index.ts",
-    "start" : "bun src/index.ts",
+    "start": "bun src/index.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write ."
@@ -16,6 +16,7 @@
     "@types/bun": "latest",
     "@types/cors": "^2.8.19",
     "@types/morgan": "^1.9.10",
+    "@types/nodemailer": "^7.0.4",
     "@typescript-eslint/eslint-plugin": "^8.48.1",
     "@typescript-eslint/parser": "^8.48.1",
     "eslint": "^9.39.1",
@@ -39,6 +40,7 @@
     "mongoose": "^9.0.0",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
+    "nodemailer": "^7.0.11",
     "winston": "^3.18.3"
   }
 }
