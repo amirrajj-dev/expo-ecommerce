@@ -4,13 +4,14 @@ import { ENV } from './configs/env';
 import mongoose from 'mongoose';
 import { connectToDb } from './db/connectToDb';
 import { clerkMiddleware } from '@clerk/express';
+import { errorMiddleware } from './middlewares/error.middleware';
 import morgan from 'morgan';
 import logger from './logging/logger';
 import helmet from 'helmet';
 import { serve } from 'inngest/express';
 import { functions, inngest } from './libs/inngest';
 import adminRoutes from './routes/admin.route';
-import { errorMiddleware } from './middlewares/error.middleware';
+import userRoutes from './routes/user.route';
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -34,6 +35,7 @@ app.use(
 );
 
 app.use('/api/admin', adminRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/api/health', (req: Request, res: Response) => {
   logger.info('Health Check');
