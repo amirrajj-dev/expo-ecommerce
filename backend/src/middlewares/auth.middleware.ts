@@ -1,7 +1,7 @@
 import { requireAuth } from '@clerk/express';
 import type { NextFunction, Request, Response } from 'express';
 import { ApiResponseHelper } from '../helpers/api.helper';
-import { User } from '../models/user.model';
+import { User, type IUserDocument } from '../models/user.model';
 import type { IUser } from '../interfaces/user.interface';
 import logger from '../logging/logger';
 import { ENV } from '../configs/env';
@@ -12,7 +12,7 @@ declare global {
       auth: () => {
         userId: string;
       };
-      user: IUser;
+      user: IUserDocument;
     }
   }
 }
