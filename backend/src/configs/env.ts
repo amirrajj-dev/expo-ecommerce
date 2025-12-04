@@ -13,4 +13,6 @@ export const ENV = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   EMAIL_USER: process.env.GMAIL_USER,
   EMAIL_PASS: process.env.GMAIL_PASS,
+  REDIS_URL: process.env.REDIS_URL,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
 };
