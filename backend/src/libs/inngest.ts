@@ -5,7 +5,7 @@ import logger from '../logging/logger';
 import type { IUser } from '../interfaces/user.interface';
 import { transporter } from './nodemailer';
 import { ENV } from '../configs/env';
-import { WELCOME_EMAIL_HTML } from '../../helpers/welcome-email';
+import { WELCOME_EMAIL_HTML } from '../helpers/welcome-email';
 
 export const inngest = new Inngest({
   id: 'expo-commerce',
@@ -38,12 +38,18 @@ const syncUser = inngest.createFunction(
       };
       await User.create(newUser);
       // sending welcome email
-      transporter.sendMail({
-        from: ENV.EMAIL_USER,
-        to: newUser.email,
-        subject: 'Welcome to Expo-Ecommerce 🎉',
-        html: WELCOME_EMAIL_HTML(newUser.name),
-      });
+      try {
+        await transporter.sendMail({
+          from: ENV.EMAIL_USER,
+          to: newUser.email,
+          subject: 'Welcome to Expo-Ecommerce 🎉',
+          html: WELCOME_EMAIL_HTML(newUser.name),
+        });
+      } catch (error) {
+        logger.error(
+          `failed to send welcome email => ${error instanceof Error ? error.message : error}`,
+        );
+      }
     } catch (error) {
       logger.error(`error syncing user => ${error instanceof Error ? error.message : error}`);
     }
