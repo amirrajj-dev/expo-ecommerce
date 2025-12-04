@@ -6,6 +6,7 @@ import type { IUser } from '../interfaces/user.interface';
 import { transporter } from './nodemailer';
 import { ENV } from '../configs/env';
 import { WELCOME_EMAIL_HTML } from '../helpers/welcome-email';
+import { redis } from './redis';
 
 export const inngest = new Inngest({
   id: 'expo-commerce',
@@ -37,6 +38,7 @@ const syncUser = inngest.createFunction(
         wishlist: [],
       };
       await User.create(newUser);
+      await redis.del('users:all');
       // sending welcome email
       try {
         await transporter.sendMail({
@@ -69,6 +71,7 @@ const deleteUser = inngest.createFunction(
       await User.deleteOne({
         clerkId: id,
       });
+      await redis.del('users:all');
     } catch (error) {
       logger.error(`error deleting user => ${error instanceof Error ? error.message : error}`);
     }

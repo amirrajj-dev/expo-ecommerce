@@ -9,6 +9,8 @@ import logger from './logging/logger';
 import helmet from 'helmet';
 import { serve } from 'inngest/express';
 import { functions, inngest } from './libs/inngest';
+import adminRoutes from './routes/admin.route';
+import { errorMiddleware } from './middlewares/error.middleware';
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -31,6 +33,8 @@ app.use(
   }),
 );
 
+app.use('/api/admin', adminRoutes);
+
 app.get('/api/health', (req: Request, res: Response) => {
   logger.info('Health Check');
   return res.status(200).json({
@@ -39,6 +43,8 @@ app.get('/api/health', (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use(errorMiddleware);
 
 if (ENV.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../admin/dist')));

@@ -5,7 +5,7 @@ import logger from '../logging/logger';
 export const redis = new Redis(ENV.REDIS_URL as string);
 
 redis.on('connect', () => {
-  logger.info('Redis connected successfully');
+  logger.info('Redis connected successfully 🌶️');
 });
 
 redis.on('error', (error) => {
@@ -13,9 +13,9 @@ redis.on('error', (error) => {
 });
 
 redis.on('ready', () => {
-  logger.info('Redis ready to accept commands');
+  logger.info('Redis ready to accept commands 🚀');
 });
 
 redis.on('close', () => {
-  logger.warn('Redis connection closed');
+  logger.warn('Redis connection closed ❌');
 });
