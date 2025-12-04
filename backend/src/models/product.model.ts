@@ -10,7 +10,7 @@ const imageSchema = new mongoose.Schema<IProductImage>({
   },
   publicId: {
     type: String,
-    required: true, // use for delete images from coludinary :)
+    required: true, // use for delete images from cloudinary :)
   },
 });
 

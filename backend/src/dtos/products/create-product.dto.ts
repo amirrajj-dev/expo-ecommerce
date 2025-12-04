@@ -14,13 +14,11 @@ export const CreateProductDto = z.object({
   price: z
     .union([z.number(), z.string()])
     .transform((val) => Number(val))
-    .refine((num) => !isNaN(num) && num >= 0, 'Invalid price')
-    .nonoptional(),
+    .refine((num) => !isNaN(num) && num >= 0, 'Invalid price'),
   stock: z
     .union([z.number(), z.string()])
     .transform((val) => Number(val))
-    .refine((num) => !isNaN(num) && num >= 0, 'Invalid stock')
-    .nonoptional(),
+    .refine((num) => !isNaN(num) && num >= 0, 'Invalid stock'),
   category: z
     .string()
     .min(1)

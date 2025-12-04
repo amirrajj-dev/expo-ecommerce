@@ -113,14 +113,7 @@ export const updateProduct = async (
         return res.status(400).json(ApiResponseHelper.badRequest('Max 3 images allowed', req.path));
       }
 
-      // Delete existing images from Cloudinary
-      await Promise.all(
-        product.images.map(async (img) => {
-          await deleteFromCloudinary(img.publicId, 'image');
-        }),
-      );
-
-      // Upload new images
+      // Upload new images first
       const uploadedImages = await Promise.all(
         files.map(async (file) => {
           const uploaded = await uploadToCloudinary(file);
@@ -128,6 +121,14 @@ export const updateProduct = async (
           return { imageUrl: uploaded.secure_url, publicId: uploaded.public_id };
         }),
       );
+
+      // then Delete existing images from Cloudinary
+      await Promise.all(
+        product.images.map(async (img) => {
+          await deleteFromCloudinary(img.publicId, 'image');
+        }),
+      );
+
       product.images = uploadedImages;
     }
 

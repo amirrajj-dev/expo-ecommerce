@@ -46,7 +46,7 @@ const shippingAddressSchema = new mongoose.Schema<IShippingAddress>({
   },
   zipCode: {
     type: String,
-    reuqired: true,
+    required: true,
   },
   phoneNumber: {
     type: String,
@@ -57,7 +57,7 @@ const shippingAddressSchema = new mongoose.Schema<IShippingAddress>({
 const orderSchema = new mongoose.Schema<IOrderDocument>(
   {
     user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
-    clerkId: { type: String, required: true, unique: true },
+    clerkId: { type: String, required: true },
     items: [orderItemSchema],
     shippingAddress: {
       type: shippingAddressSchema,

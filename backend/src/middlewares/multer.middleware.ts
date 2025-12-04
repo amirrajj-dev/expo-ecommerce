@@ -15,7 +15,10 @@ const UPLOAD_DIR = path.join(__dirname, '../uploads');
 const initUploadDir = async () => {
   await ensureUploadFolder(UPLOAD_DIR);
 };
-initUploadDir();
+initUploadDir().catch((err) => {
+  console.error('Failed to initialize upload directory:', err);
+  process.exit(1);
+});
 
 const sanitizeFilename = (name: string) => name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
 

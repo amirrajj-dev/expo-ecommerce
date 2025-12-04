@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { ENV } from '../configs/env';
 import logger from '../logging/logger';
+import fs from 'fs/promises';
 
 cloudinary.config({
   cloud_name: ENV.CLOUDINARY_CLOUD_NAME,
@@ -18,12 +19,19 @@ export const uploadToCloudinary = async (
       folder: 'expo-commerce-products',
     });
     logger.info('image uploaded succesfully');
+    await fs.unlink(file.path).catch((err) => {
+      logger.warn(`Failed to delete local file ${file.path}: ${err.message}`);
+    });
+    logger.info('image deleted from local disk');
     return {
       secure_url: result.secure_url,
       public_id: result.public_id,
     };
   } catch (error) {
     logger.error(`Error in Cloudinary upload => ${error instanceof Error ? error.message : error}`);
+    await fs.unlink(file.path).catch((err) => {
+      logger.warn(`Failed to delete local file ${file.path}: ${err.message}`);
+    });
     throw new Error('Error uploading file to Cloudinary');
   }
 };

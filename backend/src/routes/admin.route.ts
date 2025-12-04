@@ -14,15 +14,15 @@ router.use(protectRoute, adminRoute);
 // PRODUCTS
 router.post(
   '/products',
-  validate(CreateProductDto),
   upload.array('images', 3),
+  validate(CreateProductDto),
   AdminController.createProduct,
 );
 router.get('/products', AdminController.getAllProducts);
 router.put(
   '/products/:id',
-  validate(UpdateProductDto),
   upload.array('images', 3),
+  validate(UpdateProductDto),
   AdminController.updateProduct,
 );
 router.delete('/products/:id', AdminController.deleteProduct);
