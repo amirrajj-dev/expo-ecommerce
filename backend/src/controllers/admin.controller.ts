@@ -8,7 +8,7 @@ import type { CreateProductInput } from '../dtos/products/create-product.dto';
 import type { UpdateProductInput } from '../dtos/products/update-product.dto';
 import { redis } from '../libs/redis';
 import { Order } from '../models/order.model';
-import type { UpdateOrderStatusInput } from '../dtos/orders/update-order-status';
+import type { UpdateOrderStatusInput } from '../dtos/orders/update-order-status.dto';
 import { User } from '../models/user.model';
 
 export const getAllProducts = async (req: Request, res: Response) => {

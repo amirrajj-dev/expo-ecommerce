@@ -9,6 +9,10 @@ const orderItemSchema = new mongoose.Schema<IOrderItem>({
     ref: 'product',
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,
