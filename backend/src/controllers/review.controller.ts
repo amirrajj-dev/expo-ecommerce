@@ -27,6 +27,7 @@ export const createReview = async (req: Request<{}, {}, CreateReviewInput>, res:
       return res.status(403).json(ApiResponseHelper.forbidden('not authorized to review'));
     }
 
+    // Only delivered orders can be reviewed
     if (order.status !== 'delivered') {
       return res
         .status(400)
@@ -36,11 +37,11 @@ export const createReview = async (req: Request<{}, {}, CreateReviewInput>, res:
     const productInOrder = order.items.find(
       (item) => item.product.toString() === productId.toString(),
     );
-
     if (!productInOrder) {
       return res.status(400).json(ApiResponseHelper.badRequest('product not found in order'));
     }
 
+    // Prevent duplicate reviews
     const existingReview = await Review.exists({ orderId, productId, userId: user._id });
     if (existingReview) {
       return res.status(400).json(ApiResponseHelper.badRequest('already reviewed'));
@@ -55,18 +56,24 @@ export const createReview = async (req: Request<{}, {}, CreateReviewInput>, res:
 
     logger.info('review created successfully');
 
-    // Atomic rating update
+    // Atomic rating update using MongoDB pipeline
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      {
-        $inc: {
-          totalReviews: 1,
-          ratingSum: rating,
+      [
+        {
+          $set: {
+            totalReviews: { $add: ['$totalReviews', 1] },
+            ratingSum: { $add: ['$ratingSum', rating] },
+          },
         },
-        $set: {
-          averageRating: (product.ratingSum + rating) / (product.totalReviews + 1),
+        {
+          $set: {
+            averageRating: {
+              $divide: [{ $add: ['$ratingSum', rating] }, { $add: ['$totalReviews', 1] }],
+            },
+          },
         },
-      },
+      ],
       { new: true },
     );
 
@@ -78,7 +85,7 @@ export const createReview = async (req: Request<{}, {}, CreateReviewInput>, res:
     return res
       .status(201)
       .json(
-        ApiResponseHelper.success(
+        ApiResponseHelper.created(
           'review created successfully',
           { review, updatedProduct },
           req.path,
