@@ -15,4 +15,5 @@ export const ENV = {
   EMAIL_PASS: process.env.GMAIL_PASS,
   REDIS_URL: process.env.REDIS_URL,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+  CLIENT_URL: process.env.CLIENT_URL,
 };
