@@ -7,6 +7,7 @@ export interface IProduct {
   images: IProductImage[];
   averageRating: number;
   totalReviews: number;
+  ratingSum: number;
 }
 
 export interface IProductImage {

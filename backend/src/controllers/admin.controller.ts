@@ -133,6 +133,7 @@ export const updateProduct = async (
     }
 
     await product.save();
+    await redis.del(`product:${id}`);
     await redis.del('products:all');
 
     return res
