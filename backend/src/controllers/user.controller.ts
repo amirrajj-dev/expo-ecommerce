@@ -30,7 +30,7 @@ export const addAddress = async (req: Request<{}, {}, AddAddressInput>, res: Res
     };
     user.addresses.push(newAddress);
     await user.save();
-    await redis.del(`user:${user._id}:addresses`);
+    await redis.unlink(`user:${user._id}:addresses`, 'users:all');
     logger.info('address created successfully');
     return res
       .status(201)
@@ -120,7 +120,7 @@ export const updateAddress = async (
     address.zipCode = zipCode ?? address.zipCode;
 
     await user.save();
-    await redis.del(`user:${user._id}:addresses`);
+    await redis.unlink(`user:${user._id}:addresses`, 'users:all');
 
     logger.info('address updated successfully');
     return res
@@ -155,7 +155,7 @@ export const deleteAddress = async (req: Request<{ addressId: string }>, res: Re
     }
 
     await user.save();
-    await redis.del(`user:${user._id}:addresses`);
+    await redis.unlink(`user:${user._id}:addresses`, 'users:all');
 
     return res
       .status(200)
@@ -215,7 +215,7 @@ export const addToWishList = async (req: Request<{}, {}, { productId: string }>,
     }
     user.wishlist.push(productId);
     await user.save();
-    await redis.del(`user:${user._id}:wishlist`);
+    await redis.unlink(`user:${user._id}:wishlist`, 'users:all');
     logger.info('product added to wishlist succesfully');
     return res.status(200).json(
       ApiResponseHelper.success(
@@ -257,7 +257,7 @@ export const deleteProductFromWishList = async (
       { new: true, select: 'wishlist' },
     );
 
-    await redis.del(`user:${user._id}:wishlist`);
+    await redis.unlink(`user:${user._id}:wishlist`, 'users:all');
     logger.info(`user ${user._id} deleted ${productId} from wishlist`);
     return res
       .status(200)

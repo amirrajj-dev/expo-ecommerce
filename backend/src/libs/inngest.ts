@@ -38,7 +38,7 @@ const syncUser = inngest.createFunction(
         wishlist: [],
       };
       await User.create(newUser);
-      await redis.del('users:all');
+      await redis.unlink('users:all');
       // sending welcome email
       try {
         await transporter.sendMail({
@@ -71,7 +71,7 @@ const deleteUser = inngest.createFunction(
       await User.deleteOne({
         clerkId: id,
       });
-      await redis.del('users:all');
+      await redis.unlink('users:all');
     } catch (error) {
       logger.error(`error deleting user => ${error instanceof Error ? error.message : error}`);
     }

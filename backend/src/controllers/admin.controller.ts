@@ -74,7 +74,7 @@ export const createProduct = async (req: Request<{}, {}, CreateProductInput>, re
     });
 
     logger.info(`product ${product.name} created`);
-    await redis.del('products:all');
+    await redis.unlink('products:all', 'dashboard:stats');
 
     return res.status(201).json(ApiResponseHelper.created('product created', product, req.path));
   } catch (error) {
@@ -133,8 +133,7 @@ export const updateProduct = async (
     }
 
     await product.save();
-    await redis.del(`product:${id}`);
-    await redis.del('products:all');
+    await redis.unlink(`product:${id}`, 'products:all');
 
     return res
       .status(200)
@@ -165,7 +164,7 @@ export const deleteProduct = async (req: Request<{ id: string }>, res: Response)
       logger.info('product images deleted');
     }
     await Product.findByIdAndDelete(id);
-    await redis.del('products:all');
+    await redis.unlink('products:all', 'dashboard:stats', `product:${id}`);
     return res
       .status(200)
       .json(ApiResponseHelper.success('product deleted successfully', null, req.path));
@@ -223,7 +222,7 @@ export const updateOrderStatus = async (
       order.deliveredAt = new Date();
     }
     await order.save();
-    await redis.del('orders:all');
+    await redis.unlink(`user:${order.user.toString()}:orders`, 'orders:all');
 
     return res
       .status(200)

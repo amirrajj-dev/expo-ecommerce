@@ -113,7 +113,10 @@ export const createOrder = async (req: Request<{}, {}, CreateOrderInput>, res: R
 
     logger.info('order created successfully & inventory updated');
 
-    await redis.del(`user:${user._id}:orders`);
+    await redis.unlink(`user:${user._id}:orders`, 'products:all', 'dashboard:stats', 'orders:all');
+    for (const item of items) {
+      await redis.unlink(`product:${item.product.toString()}`);
+    }
 
     return res.status(201).json(ApiResponseHelper.created('order created', order, req.path));
   } catch (error) {

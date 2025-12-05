@@ -1,8 +1,10 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Model, Types, type HydratedDocument } from 'mongoose';
 import type { IUser } from '../interfaces/user.interface';
 import type { IAddress } from '../interfaces/address.interface';
 
-export interface IUserDocument extends IUser, Document {}
+export interface IUserDocument extends HydratedDocument<IUser> {
+  addresses: Types.DocumentArray<IAddress>;
+}
 
 const addressesSchema = new mongoose.Schema<IAddress>({
   label: {
