@@ -15,6 +15,8 @@ import userRoutes from './routes/user.route';
 import orderRoutes from './routes/order.route';
 import reviewRoutes from './routes/review.route';
 import productRoutes from './routes/product.route';
+import cartRoutes from './routes/cart.route';
+import cors from 'cors';
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -30,6 +32,12 @@ app.use(
 );
 app.use(clerkMiddleware());
 app.use(
+  cors({
+    origin: ENV.NODE_ENV === 'production' ? ENV.CLIENT_URL : 'http://localhost:5173',
+    credentials: true,
+  }),
+);
+app.use(
   '/api/inngest',
   serve({
     client: inngest,
@@ -42,6 +50,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
 
 app.get('/api/health', (req: Request, res: Response) => {
   logger.info('Health Check');

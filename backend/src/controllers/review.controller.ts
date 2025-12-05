@@ -79,8 +79,7 @@ export const createReview = async (req: Request<{}, {}, CreateReviewInput>, res:
 
     logger.info('product rating updated atomically');
 
-    await redis.del(`product:${productId}`);
-    await redis.del(`products:all`);
+    await redis.unlink(`product:${productId}`, `products:all`, `user:${user._id}:orders`);
 
     return res
       .status(201)
