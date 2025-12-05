@@ -12,6 +12,7 @@ import { serve } from 'inngest/express';
 import { functions, inngest } from './libs/inngest';
 import adminRoutes from './routes/admin.route';
 import userRoutes from './routes/user.route';
+import orderRoutes from './routes/order.route';
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -36,6 +37,7 @@ app.use(
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.get('/api/health', (req: Request, res: Response) => {
   logger.info('Health Check');

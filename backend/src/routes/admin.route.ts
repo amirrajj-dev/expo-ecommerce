@@ -5,7 +5,7 @@ import upload from '../middlewares/multer.middleware';
 import { validate } from '../middlewares/validation.middleware';
 import { CreateProductDto } from '../dtos/products/create-product.dto';
 import { UpdateProductDto } from '../dtos/products/update-product.dto';
-import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status';
+import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto';
 
 const router = express.Router();
 

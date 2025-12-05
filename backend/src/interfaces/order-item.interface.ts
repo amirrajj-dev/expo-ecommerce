@@ -5,4 +5,5 @@ export interface IOrderItem {
   price: number;
   quantity: number;
   image: string;
+  name: string;
 }
