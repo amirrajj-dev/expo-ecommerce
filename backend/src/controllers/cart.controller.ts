@@ -25,7 +25,7 @@ export const getCart = async (req: Request, res: Response) => {
         );
     }
 
-    let cart = await Cart.findOne({ clerkId: req.user.clerkId }).sort({ createdAt: -1 });
+    let cart = await Cart.findOne({ clerkId: req.user.clerkId });
     if (!cart) {
       cart = await Cart.create({ clerkId: req.user.clerkId, items: [] });
     }
@@ -57,6 +57,22 @@ export const addToCart = async (req: Request<{}, {}, AddToCartInput>, res: Respo
         clerkId: req.user.clerkId,
         'items.product': productId,
         'items.quantity': { $lt: product.stock },
+        $expr: {
+          $lt: [
+            {
+              $add: [
+                {
+                  $arrayElemAt: [
+                    '$items.quantity',
+                    { $indexOfArray: ['$items.product', productId] },
+                  ],
+                },
+                quantity,
+              ],
+            },
+            product.stock + 1,
+          ],
+        },
       },
       { $inc: { 'items.$.quantity': quantity } },
       { new: true },
@@ -64,6 +80,7 @@ export const addToCart = async (req: Request<{}, {}, AddToCartInput>, res: Respo
 
     if (updatedCart) {
       logger.info('existing cart item quantity incremented atomically');
+      await redis.unlink(`cart:${req.user.clerkId}`);
       return res
         .status(201)
         .json(ApiResponseHelper.created('cart updated successfully', updatedCart, req.path));
