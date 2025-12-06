@@ -28,6 +28,7 @@ export const protectRoute = [
       if (!user)
         return res.status(404).json(ApiResponseHelper.notFound('user not found', req.path));
       req.user = user;
+      logger.info('user credentials set succesfully');
       next();
     } catch (error) {
       logger.error(error instanceof Error ? error.message : 'failed to authorize user');
@@ -45,6 +46,7 @@ export const protectRoute = [
 ];
 
 export const adminRoute = async (req: Request, res: Response, next: NextFunction) => {
+  logger.info('check if user is admin ...');
   if (!req.user) {
     return res.status(401).json(ApiResponseHelper.unauthorized('unauthorized', req.path));
   }
@@ -54,5 +56,6 @@ export const adminRoute = async (req: Request, res: Response, next: NextFunction
       .status(403)
       .json(ApiResponseHelper.forbidden('forbidden - only admin allowed', req.path));
   }
+  logger.info('check admin completed');
   next();
 };

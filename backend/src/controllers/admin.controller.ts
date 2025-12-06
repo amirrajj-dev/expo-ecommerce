@@ -285,7 +285,7 @@ export const getDashboardStats = async (req: Request, res: Response) => {
         },
       },
     ]);
-    const totalRevenue = revenueResult[0].total || 0;
+    const totalRevenue = revenueResult[0]?.total || 0;
     const totalCustomers = await User.countDocuments();
     const totalProducts = await Product.countDocuments();
     const stats = { totalOrders, totalRevenue, totalCustomers, totalProducts };
