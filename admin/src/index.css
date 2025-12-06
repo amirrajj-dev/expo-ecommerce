@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@plugin "daisyui" {
+  themes: dracula;
+}
+
+@layer base {
+  [data-sonner-toast][data-x-position=right] {
+    @apply bg-base-300! border-none!
+  }
+  [data-sonner-toast][data-styled=true] [data-title]{
+    @apply text-accent!
+  }
+  [data-sonner-toast][data-styled=true] [data-icon] {
+    @apply text-accent!
+  }
+}
