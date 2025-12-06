@@ -1,11 +1,5 @@
-import { toast } from "sonner"
+import Dashboard from "../../components/pages/Dashboard/Dashboard"
 
-const DashboardPage = () => {
-  return (
-    <div className="">
-      <button onClick={()=>toast.success('product added succesfully')} className="btn btn-accent m-4">show toast</button>
-    </div>
-  )
-}
+const DashboardPage = () => <Dashboard/>
 
 export default DashboardPage
