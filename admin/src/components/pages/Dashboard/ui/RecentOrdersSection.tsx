@@ -1,8 +1,9 @@
 import RecentOrdersTable from "./RecentOrdersTable";
 import RecentOrdersSkeleton from "./RecentOrdersSkeleton";
+import type { Order } from "../../../../types/interfaces/order.interface";
 
 interface RecentOrdersSectionProps {
-  orders?: any[];
+  orders?: Order[];
   isLoading: boolean;
 }
 
