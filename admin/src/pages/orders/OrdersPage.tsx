@@ -1,7 +1,5 @@
-const OrdersPage = () => {
-  return (
-    <div>OrdersPage</div>
-  )
-}
+import Orders from "../../components/pages/orders/Orders";
+
+const OrdersPage = () =><Orders/>
 
 export default OrdersPage
