@@ -17,6 +17,6 @@ export interface User {
   clerkId: string;
   addresses: Address[];
   wishlist: string[]; // Product IDs
-  createdAt?: string;
+  createdAt: string;
   updatedAt?: string;
 }

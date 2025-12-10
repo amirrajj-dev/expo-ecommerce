@@ -44,21 +44,33 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, icon, color }: StatCardProps) => {
   const colorClasses = {
-    primary: "from-primary/10 to-primary/5 border-primary/20 bg-primary/20",
-    success: "from-success/10 to-success/5 border-success/20 bg-success/20",
-    accent: "from-accent/10 to-accent/5 border-accent/20 bg-accent/20",
+    primary: {
+      bg : 'bg-primary/20',
+      linear : 'from-primary/10 to-primary/5',
+      border : 'border-primary/20'
+    },
+    success: {
+      bg : 'bg-success/20',
+      linear : 'from-success/10 to-success/5',
+      border : 'border-success/20'
+    },
+    accent: {
+      bg : 'bg-accent/20',
+      linear : 'from-accent/10 to-accent/5',
+      border : 'border-accent/20'
+    },
   };
 
   return (
     <div
-      className={`bg-linear-to-br ${colorClasses[color]} border rounded-xl p-4`}
+      className={`bg-linear-to-br ${colorClasses[color].linear} ${colorClasses[color].border} border rounded-xl p-4`}
     >
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-base-content/70">{title}</p>
           <p className="text-2xl font-bold text-base-content mt-1">{value}</p>
         </div>
-        <div className={`p-3 rounded-lg ${colorClasses[color].split(' ')[3]}`}>
+        <div className={`p-3 ${colorClasses[color].bg} rounded-lg`}>
           {icon}
         </div>
       </div>
