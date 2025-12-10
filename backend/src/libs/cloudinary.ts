@@ -7,7 +7,6 @@ cloudinary.config({
   cloud_name: ENV.CLOUDINARY_CLOUD_NAME,
   api_key: ENV.CLOUDINARY_API_KEY,
   api_secret: ENV.CLOUDINARY_API_SECRET,
-  secure: true,
 });
 
 export const uploadToCloudinary = async (
@@ -17,6 +16,7 @@ export const uploadToCloudinary = async (
     const result = await cloudinary.uploader.upload(file.path, {
       resource_type: 'auto',
       folder: 'expo-commerce-products',
+      upload_preset: 'expo_commerce_unsigned',
     });
     logger.info('image uploaded succesfully');
     await fs.unlink(file.path).catch((err) => {

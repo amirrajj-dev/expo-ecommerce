@@ -54,7 +54,6 @@ export const createProduct = async (req: Request<{}, {}, CreateProductInput>, re
     const uploadedImages = await Promise.all(
       files.map(async (file) => {
         const uploaded = await uploadToCloudinary(file);
-        await fs.unlink(file.path); // remove local file after upload
         return {
           imageUrl: uploaded.secure_url,
           publicId: uploaded.public_id,
