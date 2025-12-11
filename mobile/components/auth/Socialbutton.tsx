@@ -18,6 +18,7 @@ interface SocialAuthProps {
 const SocialButton = ({ onPress, disabled, loading, icon, label }: SocialAuthProps) => {
   return (
     <TouchableOpacity
+      accessibilityLabel={label}
       disabled={disabled}
       onPress={onPress}
       activeOpacity={0.8}
