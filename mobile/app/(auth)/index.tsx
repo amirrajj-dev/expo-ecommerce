@@ -1,14 +1,11 @@
-import {
-  View,
-  Text,
-  Image,
-} from "react-native";
+import { View, Text, Image } from "react-native";
 import React from "react";
 import useSocialAuth from "@/hooks/auth/useSocialAuth";
 import SocialButton from "@/components/auth/Socialbutton";
 
 const AuthScreen = () => {
-  const { handleSocialAuth, isLoading } = useSocialAuth();
+  const { handleSocialAuth, loadingStrategy } = useSocialAuth();
+  const loading = loadingStrategy !== null;
 
   return (
     <View className="flex-1 items-center justify-center bg-white px-4">
@@ -20,17 +17,19 @@ const AuthScreen = () => {
 
       <View className="w-full max-w-[340px] gap-3 mt-4">
         <SocialButton
-          disabled={isLoading}
+          disabled={loading}
           onPress={() => handleSocialAuth("oauth_google")}
           icon={require("../../assets/images/google.png")}
           label="Continue With Google"
+          loading={loadingStrategy === "oauth_google"}
         />
 
         <SocialButton
-          disabled={isLoading}
+          disabled={loading}
           onPress={() => handleSocialAuth("oauth_apple")}
           icon={require("../../assets/images/apple.png")}
           label="Continue With Apple"
+          loading={loadingStrategy === "oauth_apple"}
         />
       </View>
 
