@@ -1,6 +1,6 @@
 import { useSSO } from "@clerk/clerk-expo";
 import { useState } from "react";
-import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 export type SocialStrategy = "oauth_google" | "oauth_apple";
 
@@ -21,7 +21,11 @@ const useSocialAuth = () => {
       console.log("error in social auth => ", error);
 
       const provider = strategy === "oauth_apple" ? "Apple" : "Google";
-      Alert.alert("Error", `Failed to sign in with ${provider}. Please try again.`);
+      Toast.show({
+        type : "error",
+        text1 : "Error",
+        text2 : `Failed to sign in with ${provider}. Please try again.`
+      })
     } finally {
       setLoadingStrategy(null);
     }
