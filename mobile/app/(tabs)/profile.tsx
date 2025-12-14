@@ -1,13 +1,6 @@
-import { View, Text } from 'react-native'
 import React from 'react'
-import SafeScreen from '@/components/SafeScreen'
+import Profile from '@/components/screens/profile/Profile'
 
-const ProfileScreen = () => {
-  return (
-   <SafeScreen>
-      <Text className='text-white'>ProfileScreen</Text>
-   </SafeScreen>
-  )
-}
+const ProfileScreen = () =><Profile/>
 
 export default ProfileScreen
