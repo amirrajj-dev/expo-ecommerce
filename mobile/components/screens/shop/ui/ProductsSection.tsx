@@ -121,7 +121,6 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
       columnWrapperStyle={{
         justifyContent: "space-between",
         gap: 16,
-        marginBottom: 16,
       }}
     />
   );

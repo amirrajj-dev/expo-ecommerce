@@ -1,14 +1,9 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Product as ProductI } from "@/types/interfaces/product.interface";
 import { router } from "expo-router";
+import { Image } from "expo-image";
 
 interface ProductProps {
   product: ProductI;
@@ -67,7 +62,7 @@ const Product = ({
   return (
     <TouchableOpacity
       // onPress={() => router.push(`/product/${product._id}`)}
-      className="bg-surface rounded-3xl overflow-hidden flex-1 mb-4  border border-gray-800 shadow-lg"
+      className="bg-surface rounded-3xl overflow-hidden flex-1  border border-gray-800 shadow-lg"
     >
       <View className="relative">
         {/* Wishlist Button */}
@@ -114,8 +109,13 @@ const Product = ({
         <View className="relative">
           <Image
             source={{ uri: imageUrl }}
-            className="h-56 w-full"
-            resizeMode="cover"
+            style={{ width: "100%", height: 224 }}
+            contentFit="cover"
+            placeholder={{
+              uri: "https://shopunipaq.com/images/product_placeholder.jpg",
+            }}
+            placeholderContentFit="cover"
+            transition={300}
           />
         </View>
 
