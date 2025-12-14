@@ -1,4 +1,5 @@
 import { BaseDocument } from "./base.interface";
+import { Product } from "./product.interface";
 
 export interface Address {
   label: string;
@@ -18,5 +19,5 @@ export interface User extends BaseDocument {
   imageUrl: string;
   clerkId: string;
   addresses: Address[];
-  wishlist: string[];
+  wishlist: Product[];
 }
