@@ -25,7 +25,7 @@ export const getCart = async (req: Request, res: Response) => {
         );
     }
 
-    let cart = await Cart.findOne({ clerkId: req.user.clerkId });
+    let cart = await Cart.findOne({ clerkId: req.user.clerkId }).populate('items.product');
     if (!cart) {
       cart = await Cart.create({ clerkId: req.user.clerkId, items: [] });
     }
