@@ -2,6 +2,7 @@ import { useApi } from "@/libs/axios";
 import { ApiResponse } from "@/types/api/api.interface";
 import { Product } from "@/types/interfaces/product.interface";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import Toast from "react-native-toast-message";
 
 interface WishlistResponse {
@@ -57,11 +58,11 @@ export const useDeleteFromWishlist = () => {
         text2: "Product removed from wishlist",
       });
     },
-    onError: (error: Error, productId, context) => {
-      if (!error.message.includes("not found")) {
+    onError: (error: AxiosError<{message  : string}>, productId, context) => {
+      if (!error.message.includes("not found") || error?.response?.data?.message.includes('not found')) {
         queryClient.setQueryData(["wishlist"], context?.previousWishlist);
       }
-      if (error.message.includes("Network")) {
+      if (error.message.includes("Network") || error.response?.data.message.includes('Network')) {
         Toast.show({
           type: "error",
           text1: "Network Error",
@@ -71,7 +72,7 @@ export const useDeleteFromWishlist = () => {
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: error.message || "Failed to remove from wishlist",
+          text2: error?.response?.data?.message || error.message || "Failed to remove from wishlist",
         });
       }
     },

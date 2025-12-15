@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { ApiResponse } from "@/types/api/api.interface";
 import { Cart } from "@/types/interfaces/cart.interface";
+import { AxiosError } from "axios";
 
 export const useAddToCart = () => {
   const api = useApi();
@@ -58,15 +59,15 @@ export const useAddToCart = () => {
         text2: "Product added to cart",
       });
     },
-    onError: (error: Error, _, context) => {
+    onError: (error: AxiosError<{message : string}>, _, context) => {
       queryClient.setQueryData(["cart"], context?.previousCart);
       
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: error.message.includes("stock") 
+        text2: error.message.includes("stock") || error?.response?.data?.message.includes("stock") 
           ? "Insufficient stock" 
-          : "Failed to add to cart",
+          : error?.response?.data?.message || "Failed to add to cart",
       });
     },
     onSettled: () => {

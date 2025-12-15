@@ -2,6 +2,7 @@ import { useApi } from "@/libs/axios";
 import { ApiResponse } from "@/types/api/api.interface";
 import { Product } from "@/types/interfaces/product.interface";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import Toast from "react-native-toast-message";
 
 interface WishlistResponse {
@@ -55,11 +56,11 @@ export const useAddToWishlist = () => {
         text2: "Product added to wishlist",
       });
     },
-    onError: (error: Error, _, context) => {
-      if (!error.message.includes("already exists")) {
+    onError: (error: AxiosError<{message : string}>, _, context) => {
+      if (!error.message.includes("already exists") || !error?.response?.data?.message.includes("already exists")) {
         queryClient.setQueryData(["wishlist"], context?.previousWishlist);
       }
-      if (error.message.includes("Network")) {
+      if (error.message.includes("Network") || error?.response?.data?.message.includes("Network")) {
         Toast.show({
           type: "error",
           text1: "Network Error",
@@ -69,7 +70,7 @@ export const useAddToWishlist = () => {
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: "Failed to add to wishlist",
+          text2: error?.response?.data?.message || "Failed to add to wishlist",
         });
       }
     },
