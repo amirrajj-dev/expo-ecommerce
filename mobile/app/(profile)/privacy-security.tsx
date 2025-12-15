@@ -1,13 +1,6 @@
-import { View, Text } from 'react-native'
 import React from 'react'
-import SafeScreen from '@/components/SafeScreen'
+import PrivacyAndSecurity from '@/components/screens/privacy-security/PrivacySecurity'
 
-const PrivacySecurityScreen = () => {
-  return (
-    <SafeScreen>
-      <Text>PrivacySecurityScreen</Text>
-    </SafeScreen>
-  )
-}
+const PrivacySecurityScreen = () =><PrivacyAndSecurity/>
 
 export default PrivacySecurityScreen
