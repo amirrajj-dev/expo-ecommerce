@@ -1,13 +1,6 @@
-import { View, Text } from 'react-native'
 import React from 'react'
-import SafeScreen from '@/components/SafeScreen'
+import Addresses from '@/components/screens/addresses/Addresses'
 
-const AddressesScreen = () => {
-  return (
-    <SafeScreen>
-      <Text>AddressesScreen</Text>
-    </SafeScreen>
-  )
-}
+const AddressesScreen = () =><Addresses/>
 
 export default AddressesScreen

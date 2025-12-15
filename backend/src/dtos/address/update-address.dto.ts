@@ -26,7 +26,7 @@ export const UpdateAddressDto = z.object({
     .optional(),
   state: z
     .string()
-    .min(3)
+    .min(2)
     .max(40)
     .transform((str) => str.trim())
     .optional(),
