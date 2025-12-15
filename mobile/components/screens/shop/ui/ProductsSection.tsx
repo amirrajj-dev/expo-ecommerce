@@ -78,7 +78,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
 
   const getCartItemQuantity = (productId: string): number => {
     const cartItem = cartItems.find((item) =>{
-      return String(item.product) === productId
+      return item.product._id === productId
     });
     return cartItem?.quantity || 0;
   };
