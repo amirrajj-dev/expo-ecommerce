@@ -43,11 +43,11 @@ const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) => {
           rows={3}
           className="textarea outline-none focus:outline-none w-full focus:textarea-accent focus:ring-2 focus:ring-accent/20 transition-all"
           required
-          maxLength={500}
+          maxLength={700}
         />
         <div className="label">
           <span className="label-text-alt text-base-content/50">
-            {formData.description.length}/500 characters
+            {formData.description.length}/700 characters
           </span>
         </div>
       </div>

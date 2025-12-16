@@ -72,11 +72,11 @@ const ProductDetailsForm = ({ formState, onChange }: ProductDetailsFormProps) =>
           onChange={onChange}
           placeholder="Describe the product in detail..."
           className="textarea outline-none focus:outline-none w-full focus:textarea-accent focus:ring-2 focus:ring-accent/20 transition-all resize-none"
-          maxLength={500}
+          maxLength={700}
         />
         <div className="label">
           <span className="label-text-alt text-base-content/50">
-            {formState.description.length}/500 characters
+            {formState.description.length}/700 characters
           </span>
         </div>
       </div>

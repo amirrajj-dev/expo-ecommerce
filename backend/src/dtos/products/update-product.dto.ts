@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const UpdateProductDto = z.object({
   name: z.string().min(4).max(60).trim().optional(),
-  description: z.string().min(4).max(100).trim().optional(),
+  description: z.string().min(10).max(700).trim().optional(),
   price: z
     .union([z.number(), z.string()])
     .transform((val) => Number(val))

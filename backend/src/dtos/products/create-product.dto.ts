@@ -8,8 +8,8 @@ export const CreateProductDto = z.object({
     .transform((str) => str.trim()),
   description: z
     .string()
-    .min(4)
-    .max(100)
+    .min(10)
+    .max(700)
     .transform((str) => str.trim()),
   price: z
     .union([z.number(), z.string()])
