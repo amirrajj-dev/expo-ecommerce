@@ -61,7 +61,7 @@ const Product = ({
 
   return (
     <TouchableOpacity
-      // onPress={() => router.push(`/product/${product._id}`)}
+      onPress={() => router.push(`/products/${product._id}`)}
       className="bg-surface rounded-3xl overflow-hidden flex-1  border border-gray-800 shadow-lg"
     >
       <View className="relative">
