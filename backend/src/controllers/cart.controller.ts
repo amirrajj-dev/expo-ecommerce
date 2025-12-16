@@ -142,8 +142,7 @@ export const updateCart = async (
       return res.status(404).json(ApiResponseHelper.notFound('cart or item not found', req.path));
     }
 
-    await redis.set(`cart:${req.user.clerkId}`, JSON.stringify(cart), 'EX', 60 * 60 * 12);
-
+    await redis.unlink(`cart:${req.user.clerkId}`);
     return res
       .status(200)
       .json(ApiResponseHelper.success('cart updated successfully', cart, req.path));
