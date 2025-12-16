@@ -19,7 +19,7 @@ import Header from "./ui/Header";
 import ActionBar from "./ui/ActionBar";
 
 const Product = () => {
-  const { id: productId } = useLocalSearchParams();
+  const { id: productId } = useLocalSearchParams<{id : string}>();
   const { mutate: addToCart, isPending: isPendingAddToCart } = useAddToCart();
   const { mutate: addToWishlist, isPending: isPendingAddToWishlist } =
     useAddToWishlist();
