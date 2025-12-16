@@ -33,8 +33,8 @@ const storage: StorageEngine = multer.diskStorage({
   },
 });
 
-const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp']; // security enhacment Some hackers upload .jpg that is actually .exe
+const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'images/avif'];
+const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif']; // security enhacment Some hackers upload .jpg that is actually .exe
 
 const fileFilter = (_req: Express.Request, file: Express.Multer.File, cb: FileFilterCallback) => {
   const ext = path.extname(file.originalname).toLowerCase();
