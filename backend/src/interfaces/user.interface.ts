@@ -5,6 +5,7 @@ export interface IUser {
   email: string;
   imageUrl: string;
   clerkId: string;
+  stripeCustomerId: string;
   addresses: IAddress[];
   wishlist: string[];
 }

@@ -1,4 +1,7 @@
+import type mongoose from 'mongoose';
+
 export interface IProduct {
+  _id: mongoose.Types.ObjectId;
   name: string;
   description: string;
   price: number;

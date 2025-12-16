@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema<IUserDocument>(
       required: true,
       unique: true,
     },
+    stripeCustomerId: {
+      type: String,
+      default: '',
+    },
     addresses: [addressesSchema],
     wishlist: [
       {
