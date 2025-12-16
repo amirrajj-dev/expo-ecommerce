@@ -1,4 +1,4 @@
-import express, { type Request, type Response } from 'express';
+import express, { type NextFunction, type Request, type Response } from 'express';
 import path from 'path';
 import { ENV } from './configs/env';
 import mongoose from 'mongoose';
@@ -16,11 +16,24 @@ import orderRoutes from './routes/order.route';
 import reviewRoutes from './routes/review.route';
 import productRoutes from './routes/product.route';
 import cartRoutes from './routes/cart.route';
+import paymentRoutes from './routes/payment.route';
 import cors from 'cors';
 
 const app = express();
 const PORT = ENV.PORT || 3000;
 const __dirname = path.resolve();
+
+app.use(
+  '/api/payment',
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.originalUrl === '/api/payment/webhook') {
+      express.raw({ type: 'application/json' })(req, res, next); // for webhook route /api/payment/webhook
+    } else {
+      express.json()(req, res, next); // non webhook routes like /api/payment/intent
+    }
+  },
+  paymentRoutes,
+);
 
 app.use(express.json());
 app.use(morgan('dev', { stream: { write: (msg) => logger.http(msg.trim()) } }));
