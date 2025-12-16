@@ -1,13 +1,6 @@
-import { View, Text } from 'react-native'
 import React from 'react'
-import SafeScreen from '@/components/SafeScreen'
+import Cart from '@/components/screens/cart/Cart'
 
-const CartScreen = () => {
-  return (
-   <SafeScreen>
-      <Text className='text-white'>CartScreen</Text>
-   </SafeScreen>
-  )
-}
+const CartScreen = () =><Cart/>
 
 export default CartScreen
