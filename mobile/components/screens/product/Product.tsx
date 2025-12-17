@@ -1,10 +1,9 @@
 import { ScrollView } from "react-native";
 import React, { useState } from "react";
 import SafeScreen from "@/components/SafeScreen";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useProduct } from "@/hooks/queries/product";
 import { Product as ProductI } from "@/types/interfaces/product.interface";
-import ErrorState from "./ui/ErrorState";
 import { useAddToCart } from "@/hooks/mutations/add-to-cart";
 import { useAddToWishlist } from "@/hooks/mutations/add-to-wishlist";
 import { useDeleteFromWishlist } from "@/hooks/mutations/delete-from-wishlist";
@@ -15,6 +14,7 @@ import ProductInfo from "./ui/ProductInfo";
 import Header from "./ui/Header";
 import ActionBar from "./ui/ActionBar";
 import LoadingState from "@/components/shared/LoadingState";
+import ErrorState from "@/components/shared/ErrorState";
 
 const Product = () => {
   const { id: productId } = useLocalSearchParams<{ id: string }>();
@@ -65,7 +65,15 @@ const Product = () => {
     return <LoadingState useSafeScreen text="Loading product..." />;
   }
   if (isErrorProduct) {
-    return <ErrorState />;
+    return (
+      <ErrorState
+        useSafeScreen
+        title="Product not found"
+        description="This product may have been removed or doesn't exist"
+        actionLabel="Go Back"
+        onActionPress={() => router.back()}
+      />
+    );
   }
   return (
     <SafeScreen>

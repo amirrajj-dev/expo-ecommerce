@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import Product from "@/components/screens/shop/ui/Product";
-import ErrorState from "./ErrorState";
 import EmptyState from "./EmptyState";
 import type { Product as ProductType } from "@/types/interfaces/product.interface";
 import { useWishlist } from "@/hooks/queries/wishlist";
@@ -10,6 +9,7 @@ import { useDeleteFromWishlist } from "@/hooks/mutations/delete-from-wishlist";
 import { useCart } from "@/hooks/queries/cart"; // Add this
 import { useAddToCart } from "@/hooks/mutations/add-to-cart"; // Add this
 import LoadingState from "@/components/shared/LoadingState";
+import ErrorState from "@/components/shared/ErrorState";
 
 interface ProductsSectionProps {
   products: ProductType[];
@@ -31,7 +31,12 @@ const ProductsSection = ({
       {isLoading ? (
         <LoadingState text="Loading products..." fullScreen={false} />
       ) : error ? (
-        <ErrorState error={error} />
+        <ErrorState
+          title="Failed to load products"
+          description={error?.message || "Please check your connection"}
+          iconSize={48}
+          fullScreen={false}
+        />
       ) : products.length === 0 ? (
         <EmptyState searchValue={searchValue} />
       ) : (

@@ -10,8 +10,8 @@ import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useAddAddress } from "@/hooks/mutations/add-address";
 import { useDeleteAddress } from "@/hooks/mutations/delete-address";
 import { useUpdateAddress } from "@/hooks/mutations/update-address";
-import ErrorState from "./ui/ErrorState";
 import LoadingState from "@/components/shared/LoadingState";
+import ErrorState from "@/components/shared/ErrorState";
 
 const Addresses = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
@@ -125,7 +125,13 @@ const Addresses = () => {
     );
   }
   if (isError) {
-    return <ErrorState />;
+    return (
+      <ErrorState
+        useSafeScreen
+        header={<AddressesHeader />}
+        title="Failed to load addresses"
+      />
+    );
   }
 
   return (

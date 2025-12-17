@@ -9,8 +9,8 @@ import { Ionicons } from "@expo/vector-icons";
 import WishlistItem from "./ui/WishlistItem";
 import { useCart } from "@/hooks/queries/cart";
 import EmptyState from "./ui/EmptyState";
-import ErrorState from "./ui/ErrorState";
 import LoadingState from "@/components/shared/LoadingState";
+import ErrorState from "@/components/shared/ErrorState";
 
 const Wishlist = () => {
   const { mutate: deleteFromWishlist, isPending: isPendingDeleteFromWishlist } =
@@ -47,7 +47,22 @@ const Wishlist = () => {
   }
 
   if (isWishlistError || isCartError) {
-    return <ErrorState />;
+    return (
+      <ErrorState
+        useSafeScreen
+        title="Failed to load wishlist"
+        header={
+          <View className="px-6 pb-5 border-b border-surface flex-row items-center">
+            <TouchableOpacity onPress={() => router.back()} className="mr-4">
+              <Ionicons name="arrow-back" size={28} color="#fff" />
+            </TouchableOpacity>
+            <Text className="text-text-primary text-2xl font-bold">
+              Wishlist
+            </Text>
+          </View>
+        }
+      />
+    );
   }
 
   const wishlist = wishlistData?.data || [];

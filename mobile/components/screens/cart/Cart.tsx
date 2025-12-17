@@ -5,7 +5,6 @@ import { useCart } from "@/hooks/queries/cart";
 import { useDeleteFromCart } from "@/hooks/mutations/delete-from-cart";
 import { useUpdateCart } from "@/hooks/mutations/update-cart";
 import { useClearCart } from "@/hooks/mutations/clear-cart";
-import ErrorState from "./ui/ErrorState";
 import EmptyState from "./ui/EmptyState";
 import { useAddresses } from "@/hooks/queries/addresses";
 import { useStripe } from "@stripe/stripe-react-native";
@@ -18,6 +17,7 @@ import CheckOutBtn from "./ui/CheckOutBtn";
 import AddressSelectionModal from "./ui/AddressSelectionModal";
 import { useApi } from "@/libs/axios";
 import LoadingState from "@/components/shared/LoadingState";
+import ErrorState from "@/components/shared/ErrorState";
 
 const Cart = () => {
   const api = useApi();
@@ -37,8 +37,7 @@ const Cart = () => {
   const { mutate: updateCart, isPending: isPendingUpdateCart } = useUpdateCart(
     updateProductId as string
   );
-  const { mutateAsync: clearCart, isPending: isPendingClearCart } =
-    useClearCart();
+  const { mutateAsync: clearCart } = useClearCart();
   const cartItems = cartData?.data?.items || [];
   const addresses = addressesData?.data || [];
   const cartTotal =
@@ -169,7 +168,14 @@ const Cart = () => {
         containerClassName="flex-1 bg-background items-center justify-center"
       />
     );
-  if (isErrorCart || isErrorAddresses) return <ErrorState />;
+  if (isErrorCart || isErrorAddresses)
+    return (
+      <ErrorState
+        title="Failed to load cart"
+        containerClassName="flex-1 bg-background items-center justify-center px-6"
+      />
+    );
+
   if (cartItems.length === 0) return <EmptyState />;
   return (
     <SafeScreen>
