@@ -204,9 +204,10 @@ export const handleWebHook = async (req: Request, res: Response) => {
       await Product.findByIdAndUpdate(item.product, {
         $inc: { stock: -item.quantity },
       });
+      await redis.unlink(`product:${item.product}`);
     }
 
-    await redis.unlink('products:all', 'dashboard:stats');
+    await redis.unlink('products:all', 'dashboard:stats', `user:${userId}:orders`);
     logger.info('🧹 Redis cache cleared');
 
     return res
