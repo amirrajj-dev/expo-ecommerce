@@ -52,7 +52,6 @@ export const useAddToCart = () => {
       return { previousCart };
     },
     onSuccess: (response) => {
-      queryClient.setQueryData(["cart"], response);
       Toast.show({
         type: "success",
         text1: "Success",

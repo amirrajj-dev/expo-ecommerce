@@ -121,7 +121,7 @@ const Cart = () => {
         },
       });
       const {error : initError} = await initPaymentSheet({
-        paymentIntentClientSecret: data.clientSecret,
+        paymentIntentClientSecret: data.data.clientSecret,
         merchantDisplayName : "expo-ecommerce"
       });
       if (initError) {

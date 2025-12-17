@@ -8,6 +8,7 @@ import type { IAddress } from '../interfaces/address.interface';
 import type { ICartItem, ICartItemWithProduct } from '../interfaces/cart-item.interface';
 import logger from '../logging/logger';
 import { ApiResponseHelper } from '../helpers/api.helper';
+import { redis } from '../libs/redis';
 
 const stripe = new Stripe(ENV.STRIPE_SECRET_KEY as string);
 
@@ -20,12 +21,12 @@ interface IValidItem {
 }
 
 export const createIntent = async (
-  req: Request<{}, {}, { cartItems: ICartItemWithProduct[]; shippingAdress: IAddress }>,
+  req: Request<{}, {}, { cartItems: ICartItemWithProduct[]; shippingAddress: IAddress }>,
   res: Response,
 ) => {
   try {
     logger.info('creating intent ...');
-    const { cartItems, shippingAdress } = req.body;
+    const { cartItems, shippingAddress } = req.body;
     const user = req.user;
     let subTotal = 0;
     let validatedItems: IValidItem[] = [];
@@ -95,7 +96,7 @@ export const createIntent = async (
         clerkId: user.clerkId,
         userId: user._id.toString(),
         orderItems: JSON.stringify(validatedItems),
-        shippingAdress: JSON.stringify(shippingAdress),
+        shippingAddress: JSON.stringify(shippingAddress),
         totalPrice: total.toFixed(2),
       },
     });
@@ -124,7 +125,7 @@ export const handleWebHook = async (req: Request, res: Response) => {
     let event;
     try {
       logger.info('validating signature ...');
-      event = stripe.webhooks.constructEvent(req.body, sig, ENV.STRIPE_WEBHOOK_SECRET!);
+      event = await stripe.webhooks.constructEventAsync(req.body, sig, ENV.STRIPE_WEBHOOK_SECRET!);
     } catch (error) {
       logger.info('webhook signature vertification failed');
       return res
@@ -170,7 +171,8 @@ export const handleWebHook = async (req: Request, res: Response) => {
             $inc: { stock: -item.quantity },
           });
         }
-        logger.info('product stock updated');
+        await redis.unlink('products:all', 'dashboard:stats');
+        logger.info('product stock updated and redis cache cleared');
       } catch (error) {
         logger.info(
           'Error creating order from webhook:',
