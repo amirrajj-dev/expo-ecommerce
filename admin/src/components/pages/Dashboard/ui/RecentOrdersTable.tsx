@@ -47,7 +47,7 @@ const OrderTableRow = ({ order }: OrderTableRowProps) => {
   const formatOrderId = (id: string) => id.substring(0, 8) + "...";
   const getCustomerName = (user: any) => {
     if (typeof user === "string") return user;
-    return user?.fullName || "N/A";
+    return user?.name || "N/A";
   };
   
   const formatItems = (items: any[]) => {
