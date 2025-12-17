@@ -56,26 +56,23 @@ export const createReview = async (req: Request<{}, {}, CreateReviewInput>, res:
 
     logger.info('review created successfully');
 
-    // Atomic rating update using MongoDB pipeline
+    // Atomic rating update
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      [
-        {
-          $set: {
-            totalReviews: { $add: ['$totalReviews', 1] },
-            ratingSum: { $add: ['$ratingSum', rating] },
-          },
+      {
+        $inc: {
+          totalReviews: 1,
+          ratingSum: rating,
         },
-        {
-          $set: {
-            averageRating: {
-              $divide: [{ $add: ['$ratingSum', rating] }, { $add: ['$totalReviews', 1] }],
-            },
-          },
-        },
-      ],
+      },
       { new: true },
     );
+
+    // Calculate average rating AFTER the update
+    if (updatedProduct) {
+      updatedProduct.averageRating = updatedProduct.ratingSum / updatedProduct.totalReviews;
+      await updatedProduct.save();
+    }
 
     logger.info('product rating updated atomically');
 
