@@ -54,7 +54,7 @@ const shippingAddressSchema = new mongoose.Schema<IShippingAddress>({
   },
   phoneNumber: {
     type: String,
-    requried: true,
+    required: true,
   },
 });
 

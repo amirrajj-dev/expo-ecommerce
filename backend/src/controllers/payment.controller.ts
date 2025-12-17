@@ -5,7 +5,7 @@ import { User } from '../models/user.model';
 import { Product } from '../models/product.model';
 import { Order } from '../models/order.model';
 import type { IAddress } from '../interfaces/address.interface';
-import type { ICartItem, ICartItemWithProduct } from '../interfaces/cart-item.interface';
+import type { ICartItemWithProduct } from '../interfaces/cart-item.interface';
 import logger from '../logging/logger';
 import { ApiResponseHelper } from '../helpers/api.helper';
 import { redis } from '../libs/redis';
@@ -119,74 +119,103 @@ export const createIntent = async (
 };
 
 export const handleWebHook = async (req: Request, res: Response) => {
+  const sig = req.headers['stripe-signature'] as string;
+
+  let event: Stripe.Event;
+
   try {
-    logger.info('stripe webhook called ...');
-    const sig = req.headers['stripe-signature'] as string;
-    let event;
-    try {
-      logger.info('validating signature ...');
-      event = await stripe.webhooks.constructEventAsync(req.body, sig, ENV.STRIPE_WEBHOOK_SECRET!);
-    } catch (error) {
-      logger.info('webhook signature vertification failed');
+    event = await stripe.webhooks.constructEventAsync(
+      req.body,
+      sig,
+      ENV.STRIPE_WEBHOOK_SECRET as string,
+    );
+  } catch (err) {
+    logger.error('❌ Stripe webhook signature verification failed', err);
+    return res.status(400).json(ApiResponseHelper.badRequest('Invalid signature', req.path));
+  }
+
+  if (event.type !== 'payment_intent.succeeded') {
+    return res
+      .status(200)
+      .json(
+        ApiResponseHelper.success(
+          `payment type is ${event.type || 'unkown type'}`,
+          { received: true },
+          req.path,
+        ),
+      );
+  }
+
+  const paymentIntent = event.data.object as Stripe.PaymentIntent;
+
+  try {
+    logger.info(`💰 Payment succeeded: ${paymentIntent.id}`);
+
+    const { userId, clerkId, orderItems, shippingAddress, totalPrice } =
+      paymentIntent.metadata ?? {};
+
+    if (!userId || !orderItems || !shippingAddress || !totalPrice) {
+      throw new Error('Missing payment intent metadata');
+    }
+
+    const existingOrder = await Order.findOne({
+      'paymentResult.id': paymentIntent.id,
+    });
+
+    if (existingOrder) {
+      logger.info(`⚠️ Order already exists for ${paymentIntent.id}`);
       return res
-        .status(400)
+        .status(200)
         .json(
-          ApiResponseHelper.badRequest(
-            `webhook error : ${error instanceof Error ? error.message : error}`,
+          ApiResponseHelper.success(
+            `⚠️ Order already exists for ${paymentIntent.id}`,
+            { received: true },
             req.path,
           ),
         );
     }
-    if (event.type === 'payment_intent.succeeded') {
-      const paymentIntent = event.data.object;
-      logger.info('payment succeeded', paymentIntent.id);
-      try {
-        const { userId, clerkId, orderItems, shippingAddress, totalPrice } = paymentIntent.metadata;
-        const existingOrder = await Order.findOne({ 'paymentResult.id': paymentIntent.id });
-        if (existingOrder) {
-          logger.info('Order already exists for payment:', paymentIntent.id);
-          return res
-            .status(200)
-            .json(ApiResponseHelper.success('order already exists', { received: true }, req.path));
-        }
-        logger.info('creating order ...');
-        const order = await Order.create({
-          user: userId,
-          clerkId,
-          items: JSON.parse(orderItems as string),
-          shippingAddress: JSON.parse(shippingAddress as string),
-          paymentResult: {
-            id: paymentIntent.id,
-            status: 'succeeded',
-          },
-          totalPrice: parseFloat(totalPrice as string),
-        });
-        logger.info('order created succesfully', order._id);
 
-        logger.info('updating product stock ...');
-        // update product stock
-        const items: ICartItem[] = JSON.parse(orderItems as string);
-        for (const item of items) {
-          await Product.findByIdAndUpdate(item.product, {
-            $inc: { stock: -item.quantity },
-          });
-        }
-        await redis.unlink('products:all', 'dashboard:stats');
-        logger.info('product stock updated and redis cache cleared');
-      } catch (error) {
-        logger.info(
-          'Error creating order from webhook:',
-          error instanceof Error ? error.message : error,
-        );
-      }
+    const parsedItems = JSON.parse(orderItems);
+    const parsedAddress = JSON.parse(shippingAddress);
+
+    const normalizedItems = parsedItems.map((item: any) => ({
+      product: item.product,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image,
+    }));
+
+    const order = await Order.create({
+      user: userId,
+      clerkId,
+      items: normalizedItems,
+      shippingAddress: parsedAddress,
+      paymentResult: {
+        id: paymentIntent.id,
+        status: paymentIntent.status,
+      },
+      totalPrice: Number(totalPrice),
+    });
+
+    logger.info(`✅ Order saved: ${order._id}`);
+
+    for (const item of normalizedItems) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: -item.quantity },
+      });
     }
+
+    await redis.unlink('products:all', 'dashboard:stats');
+    logger.info('🧹 Redis cache cleared');
+
     return res
       .status(200)
-      .json(ApiResponseHelper.success('order created succesfullly', { received: true }, req.path));
-  } catch (error) {
-    logger.info('something goes wrong in stripe webhook');
+      .json(ApiResponseHelper.success('orde created succesfully', { received: true }, req.path));
+  } catch (err) {
+    logger.error('🔥 Webhook processing failed', err);
     return res
       .status(500)
-      .json(ApiResponseHelper.internal('something goes wrong in stripe webhook', req.path, error));
+      .json(ApiResponseHelper.internal('Webhook processing failed', req.path, err));
   }
 };
