@@ -37,11 +37,7 @@ export const getUserOrders = async (req: Request, res: Response) => {
     return res
       .status(200)
       .json(
-        ApiResponseHelper.success(
-          'orders fetched succesfully',
-          { orders: ordersWithReviewedStatus },
-          req.path,
-        ),
+        ApiResponseHelper.success('orders fetched succesfully', ordersWithReviewedStatus, req.path),
       );
   } catch (error) {
     logger.error('failed to fetch user orders', error);
