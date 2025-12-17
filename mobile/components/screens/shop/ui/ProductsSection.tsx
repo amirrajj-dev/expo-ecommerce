@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import Product from "@/components/screens/shop/ui/Product";
-import EmptyState from "./EmptyState";
 import type { Product as ProductType } from "@/types/interfaces/product.interface";
 import { useWishlist } from "@/hooks/queries/wishlist";
 import { useAddToWishlist } from "@/hooks/mutations/add-to-wishlist";
@@ -10,6 +9,7 @@ import { useCart } from "@/hooks/queries/cart"; // Add this
 import { useAddToCart } from "@/hooks/mutations/add-to-cart"; // Add this
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
+import EmptyState from "@/components/shared/EmptyState";
 
 interface ProductsSectionProps {
   products: ProductType[];
@@ -38,7 +38,18 @@ const ProductsSection = ({
           fullScreen={false}
         />
       ) : products.length === 0 ? (
-        <EmptyState searchValue={searchValue} />
+        <EmptyState
+          title="No products found"
+          description={
+            searchValue
+              ? `No results for "${searchValue}"`
+              : "No products available"
+          }
+          iconName="search-outline"
+          iconSize={48}
+          iconColor="#B3B3B3"
+          fullScreen={false}
+        />
       ) : (
         <ProductsGrid products={products} />
       )}

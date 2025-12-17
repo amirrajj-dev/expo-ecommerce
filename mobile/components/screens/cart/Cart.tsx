@@ -5,7 +5,6 @@ import { useCart } from "@/hooks/queries/cart";
 import { useDeleteFromCart } from "@/hooks/mutations/delete-from-cart";
 import { useUpdateCart } from "@/hooks/mutations/update-cart";
 import { useClearCart } from "@/hooks/mutations/clear-cart";
-import EmptyState from "./ui/EmptyState";
 import { useAddresses } from "@/hooks/queries/addresses";
 import { useStripe } from "@stripe/stripe-react-native";
 import Toast from "react-native-toast-message";
@@ -18,6 +17,7 @@ import AddressSelectionModal from "./ui/AddressSelectionModal";
 import { useApi } from "@/libs/axios";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
+import EmptyState from "@/components/shared/EmptyState";
 
 const Cart = () => {
   const api = useApi();
@@ -176,7 +176,22 @@ const Cart = () => {
       />
     );
 
-  if (cartItems.length === 0) return <EmptyState />;
+  if (cartItems.length === 0)
+    return (
+      <EmptyState
+        title="Your cart is empty"
+        description="Add some products to get started"
+        iconName="cart-outline"
+        containerClassName="flex-1 items-center justify-center px-6"
+        useSafeScreen
+        header={
+          <View className="px-6 pb-5 bg-background">
+            <Text className="text-text-primary text-3xl font-bold">Cart</Text>
+          </View>
+        }
+      />
+    );
+
   return (
     <SafeScreen>
       <Text className="px-6 pb-5 text-text-primary text-3xl font-bold tracking-tight">

@@ -6,13 +6,13 @@ import { useCreateReview } from "@/hooks/mutations/create-review";
 import { Order } from "@/types/interfaces/order.interface";
 import Toast from "react-native-toast-message";
 import { Product } from "@/types/interfaces/product.interface";
-import EmptyState from "./ui/EmptyState";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import RatingModal from "./ui/RatingModal";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
+import EmptyState from "@/components/shared/EmptyState";
 
 const Orders = () => {
   const {
@@ -123,7 +123,11 @@ const Orders = () => {
       ) : isErrorOrders ? (
         <ErrorState title="Failed to load orders" />
       ) : !orders || orders?.length === 0 ? (
-        <EmptyState />
+        <EmptyState
+          title="No orders yet"
+          description="Your order history will appear here"
+          iconName="receipt-outline"
+        />
       ) : (
         <ScrollView
           className="flex-1"

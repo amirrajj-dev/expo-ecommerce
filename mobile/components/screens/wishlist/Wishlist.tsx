@@ -8,9 +8,9 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import WishlistItem from "./ui/WishlistItem";
 import { useCart } from "@/hooks/queries/cart";
-import EmptyState from "./ui/EmptyState";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
+import EmptyState from "@/components/shared/EmptyState";
 
 const Wishlist = () => {
   const { mutate: deleteFromWishlist, isPending: isPendingDeleteFromWishlist } =
@@ -69,7 +69,27 @@ const Wishlist = () => {
   const cartItems = cartData?.data?.items || [];
 
   if (wishlist.length === 0) {
-    return <EmptyState />;
+    return (
+      <EmptyState
+        useSafeScreen
+        title="Your wishlist is empty"
+        description="Start adding products you love!"
+        iconName="heart-outline"
+        actionLabel="Browse Products"
+        onActionPress={() => router.push("/(tabs)")}
+        header={
+          <View className="px-6 pb-5 border-b border-surface flex-row items-center">
+            <TouchableOpacity onPress={() => router.back()} className="mr-4">
+              <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text className="text-text-primary text-2xl font-bold">
+              Wishlist
+            </Text>
+            <Text className="text-text-secondary text-sm ml-auto">0 items</Text>
+          </View>
+        }
+      />
+    );
   }
 
   const handleRemoveFromWishlist = (productId: string, productName: string) => {

@@ -12,6 +12,7 @@ import { useDeleteAddress } from "@/hooks/mutations/delete-address";
 import { useUpdateAddress } from "@/hooks/mutations/update-address";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
+import EmptyState from "@/components/shared/EmptyState";
 
 const Addresses = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
@@ -139,24 +140,13 @@ const Addresses = () => {
       <AddressesHeader />
 
       {addresses.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-6">
-          <Ionicons name="location-outline" size={80} color="#666" />
-          <Text className="text-text-primary font-semibold text-xl mt-4">
-            No addresses yet
-          </Text>
-          <Text className="text-text-secondary text-center mt-2">
-            Add your first delivery address
-          </Text>
-          <TouchableOpacity
-            className="bg-primary rounded-2xl px-8 py-4 mt-6"
-            activeOpacity={0.8}
-            onPress={handleAddAddress}
-          >
-            <Text className="text-background font-bold text-base">
-              Add Address
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <EmptyState
+          title="No addresses yet"
+          description="Add your first delivery address"
+          iconName="location-outline"
+          actionLabel="Add Address"
+          onActionPress={handleAddAddress}
+        />
       ) : (
         <ScrollView
           className="flex-1"
