@@ -31,11 +31,11 @@ export interface Order extends BaseDocument {
   user: string;
   clerkId: string;
   items: OrderItem[];
-  shippingAddress: ShippingAddress;
-  paymentResult?: PaymentResult;
-  totalPrice: number;
+  paymentResult: PaymentResult
   status: OrderStatus;
-  hasReviewed : boolean;
-  deliveredAt?: string | Date;
-  shippedAt?: string | Date;
+  totalPrice: number;
+  shippingAddress: ShippingAddress;
+  deliveredAt?: Date; 
+  shippedAt?: Date;   
+  hasReviewed: boolean;
 }
