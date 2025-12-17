@@ -9,8 +9,8 @@ import { Ionicons } from "@expo/vector-icons";
 import WishlistItem from "./ui/WishlistItem";
 import { useCart } from "@/hooks/queries/cart";
 import EmptyState from "./ui/EmptyState";
-import LoadingState from "./ui/LoadingState";
 import ErrorState from "./ui/ErrorState";
+import LoadingState from "@/components/shared/LoadingState";
 
 const Wishlist = () => {
   const { mutate: deleteFromWishlist, isPending: isPendingDeleteFromWishlist } =
@@ -27,9 +27,23 @@ const Wishlist = () => {
     isError: isCartError,
   } = useCart();
 
-
   if (isLoadingWishlist || isLoadingCart) {
-    return <LoadingState />;
+    return (
+      <LoadingState
+        useSafeScreen
+        text="Loading wishlist..."
+        header={
+          <View className="px-6 pb-5 m-4 border-b border-surface flex-row items-center">
+            <TouchableOpacity onPress={() => router.back()} className="mr-4">
+              <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text className="text-text-primary text-2xl font-bold">
+              Wishlist
+            </Text>
+          </View>
+        }
+      />
+    );
   }
 
   if (isWishlistError || isCartError) {
@@ -39,11 +53,10 @@ const Wishlist = () => {
   const wishlist = wishlistData?.data || [];
   const cartItems = cartData?.data?.items || [];
 
-  
   if (wishlist.length === 0) {
     return <EmptyState />;
   }
-  
+
   const handleRemoveFromWishlist = (productId: string, productName: string) => {
     Alert.alert("Remove From Wishlist", `Remove ${productName} From Wishlist`, [
       {
@@ -61,7 +74,7 @@ const Wishlist = () => {
   const handleAddToCart = (productId: string) => {
     addToCart({ productId, quantity: 1 });
   };
-  
+
   return (
     <SafeScreen>
       <View className="m-4 gap-8">

@@ -5,7 +5,6 @@ import { useCart } from "@/hooks/queries/cart";
 import { useDeleteFromCart } from "@/hooks/mutations/delete-from-cart";
 import { useUpdateCart } from "@/hooks/mutations/update-cart";
 import { useClearCart } from "@/hooks/mutations/clear-cart";
-import LoadingState from "./ui/LoadingState";
 import ErrorState from "./ui/ErrorState";
 import EmptyState from "./ui/EmptyState";
 import { useAddresses } from "@/hooks/queries/addresses";
@@ -18,6 +17,7 @@ import QuickStats from "./ui/QuickStats";
 import CheckOutBtn from "./ui/CheckOutBtn";
 import AddressSelectionModal from "./ui/AddressSelectionModal";
 import { useApi } from "@/libs/axios";
+import LoadingState from "@/components/shared/LoadingState";
 
 const Cart = () => {
   const api = useApi();
@@ -120,48 +120,55 @@ const Cart = () => {
           phoneNumber: selectedAddress.phoneNumber,
         },
       });
-      const {error : initError} = await initPaymentSheet({
+      const { error: initError } = await initPaymentSheet({
         paymentIntentClientSecret: data.data.clientSecret,
-        merchantDisplayName : "expo-ecommerce"
+        merchantDisplayName: "expo-ecommerce",
       });
       if (initError) {
         Toast.show({
-          type : "error",
-          text1 : "Error",
-          text2 : initError.message
-        })
+          type: "error",
+          text1: "Error",
+          text2: initError.message,
+        });
         setPaymentLoading(false);
       }
-      const {error : presentError} = await presentPaymentSheet()
-      if (presentError){
+      const { error: presentError } = await presentPaymentSheet();
+      if (presentError) {
         Toast.show({
-          type : "error",
-          text1 : "Error",
-          text2 : presentError.message
-        })
+          type: "error",
+          text1: "Error",
+          text2: presentError.message,
+        });
         setPaymentLoading(false);
-        return
-      }else{
+        return;
+      } else {
         Toast.show({
-          type : "success",
-          text1 : "Success",
-          text2 : "Your Payment Was Successfull! Your Order Is Being Proceed."
-        })
-        clearCart()
+          type: "success",
+          text1: "Success",
+          text2: "Your Payment Was Successfull! Your Order Is Being Proceed.",
+        });
+        clearCart();
       }
     } catch (error) {
-      console.log("payment error => " , error);
+      console.log("payment error => ", error);
       Toast.show({
-        type : "error",
-        text1 : "Error",
-        text2 : error instanceof Error ? error.message : "Failed to Process Payment"
-      })
-    }finally{
-      setPaymentLoading(false)
+        type: "error",
+        text1: "Error",
+        text2:
+          error instanceof Error ? error.message : "Failed to Process Payment",
+      });
+    } finally {
+      setPaymentLoading(false);
     }
   };
 
-  if (isLoadingCart || isLoadingAddresses) return <LoadingState />;
+  if (isLoadingCart || isLoadingAddresses)
+    return (
+      <LoadingState
+        text="Loading cart..."
+        containerClassName="flex-1 bg-background items-center justify-center"
+      />
+    );
   if (isErrorCart || isErrorAddresses) return <ErrorState />;
   if (cartItems.length === 0) return <EmptyState />;
   return (

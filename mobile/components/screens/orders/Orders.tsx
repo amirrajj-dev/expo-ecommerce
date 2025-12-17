@@ -6,13 +6,13 @@ import { useCreateReview } from "@/hooks/mutations/create-review";
 import { Order } from "@/types/interfaces/order.interface";
 import Toast from "react-native-toast-message";
 import { Product } from "@/types/interfaces/product.interface";
-import LoadingState from "./ui/LoadingState";
 import ErrorState from "./ui/ErrorState";
 import EmptyState from "./ui/EmptyState";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import RatingModal from "./ui/RatingModal";
+import LoadingState from "@/components/shared/LoadingState";
 
 const Orders = () => {
   const {
@@ -119,7 +119,7 @@ const Orders = () => {
       </View>
 
       {isLoadingOrders ? (
-        <LoadingState />
+        <LoadingState text="Loading orders..." />
       ) : isErrorOrders ? (
         <ErrorState />
       ) : !orders || orders?.length === 0 ? (
@@ -146,7 +146,7 @@ const Orders = () => {
                   <View className="flex-row mb-4">
                     <View className="relative">
                       <Image
-                        source={{uri : firstImage }}
+                        source={{ uri: firstImage }}
                         style={{ height: 80, width: 80, borderRadius: 8 }}
                         contentFit="cover"
                       />

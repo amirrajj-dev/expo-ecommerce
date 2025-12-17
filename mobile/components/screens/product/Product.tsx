@@ -1,12 +1,9 @@
-import {
-  ScrollView,
-} from "react-native";
+import { ScrollView } from "react-native";
 import React, { useState } from "react";
 import SafeScreen from "@/components/SafeScreen";
 import { useLocalSearchParams } from "expo-router";
 import { useProduct } from "@/hooks/queries/product";
 import { Product as ProductI } from "@/types/interfaces/product.interface";
-import LoadingState from "./ui/LoadingState";
 import ErrorState from "./ui/ErrorState";
 import { useAddToCart } from "@/hooks/mutations/add-to-cart";
 import { useAddToWishlist } from "@/hooks/mutations/add-to-wishlist";
@@ -17,9 +14,10 @@ import ImageGallary from "./ui/ImageGallary";
 import ProductInfo from "./ui/ProductInfo";
 import Header from "./ui/Header";
 import ActionBar from "./ui/ActionBar";
+import LoadingState from "@/components/shared/LoadingState";
 
 const Product = () => {
-  const { id: productId } = useLocalSearchParams<{id : string}>();
+  const { id: productId } = useLocalSearchParams<{ id: string }>();
   const { mutate: addToCart, isPending: isPendingAddToCart } = useAddToCart();
   const { mutate: addToWishlist, isPending: isPendingAddToWishlist } =
     useAddToWishlist();
@@ -64,7 +62,7 @@ const Product = () => {
   };
 
   if (isLoadingProduct || isLoadingWishlist || isLoadingCart) {
-    return <LoadingState />;
+    return <LoadingState useSafeScreen text="Loading product..." />;
   }
   if (isErrorProduct) {
     return <ErrorState />;

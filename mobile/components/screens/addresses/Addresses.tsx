@@ -10,8 +10,8 @@ import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useAddAddress } from "@/hooks/mutations/add-address";
 import { useDeleteAddress } from "@/hooks/mutations/delete-address";
 import { useUpdateAddress } from "@/hooks/mutations/update-address";
-import LoadingState from "./ui/LoadingState";
 import ErrorState from "./ui/ErrorState";
+import LoadingState from "@/components/shared/LoadingState";
 
 const Addresses = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
@@ -115,7 +115,14 @@ const Addresses = () => {
   };
 
   if (isLoading) {
-    return <LoadingState />;
+    return (
+      <LoadingState
+        useSafeScreen
+        header={<AddressesHeader />}
+        text="Loading addresses..."
+        containerClassName="flex-1 items-center justify-center px-6"
+      />
+    );
   }
   if (isError) {
     return <ErrorState />;
